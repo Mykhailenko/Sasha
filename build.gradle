@@ -12,5 +12,21 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+//    compile 'com.atlassian.bitbucket.server:bitbucket-api:4.0.0-m27'
+//    compile 'org.kohsuke:github-api:1.93'
+//    compile 'com.offbytwo.jenkins:jenkins-client:0.3.7'
+
+
+
+    compile 'org.eclipse.jetty:jetty-server:9.2.3.v20140905'
+    compile 'org.eclipse.jetty:jetty-servlet:9.2.3.v20140905'
+
+    compile 'org.glassfish.jersey.core:jersey-server:2.7'
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.7'
+    compile 'org.glassfish.jersey.containers:jersey-container-jetty-http:2.7'
+    compile 'org.glassfish.jersey.media:jersey-media-moxy:2.7'
+
+    testCompile 'junit:junit:4.12'
+
+
 }
