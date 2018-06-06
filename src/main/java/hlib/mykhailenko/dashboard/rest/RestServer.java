@@ -1,30 +1,31 @@
 package hlib.mykhailenko.dashboard.rest;
 
-import hlib.mykhailenko.dashboard.github.GitHubConnector;
+import hlib.mykhailenko.dashboard.model.Ruler;
 
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.lang.reflect.InvocationTargetException;
 
 
 @Path("/")
 public class RestServer {
 
-    GitHubConnector gitHubClient = new GitHubConnector();
 
-    public RestServer() throws IOException, URISyntaxException {
+    Ruler ruler = new Ruler("hlib.mykhailenko.dashboard.rules");
+
+    public RestServer() throws Exception {
     }
 
     @GET
-    @Path("github/pulls")
+    @Path("rules")
     @Produces(MediaType.TEXT_PLAIN)
-    public String test() throws IOException {
+    public String evaluatedRules() throws IOException {
 
-        return "Total amount of hours that PRs are open is " + gitHubClient.hoursPROpen();
+
+        return "There will be a set of evaluated rules.";
     }
 
 

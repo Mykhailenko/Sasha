@@ -1,5 +1,6 @@
-package hlib.mykhailenko.dashboard.github;
+package hlib.mykhailenko.dashboard.rules;
 
+import hlib.mykhailenko.dashboard.model.Rule;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
@@ -28,6 +29,7 @@ public class GitHubConnector {
         }
     }
 
+    @Rule
     public int hoursPROpen() throws IOException {
         int result = 0;
         for (GHRepository repo : repos) {
