@@ -1,6 +1,6 @@
 package hlib.mykhailenko.dashboard.rest;
 
-import hlib.mykhailenko.dashboard.github.GitHubClient;
+import hlib.mykhailenko.dashboard.github.GitHubConnector;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -14,16 +14,18 @@ import java.net.URISyntaxException;
 @Path("/")
 public class RestServer {
 
-    GitHubClient gitHubClient = new GitHubClient();
+    GitHubConnector gitHubClient = new GitHubConnector();
 
     public RestServer() throws IOException, URISyntaxException {
     }
 
     @GET
-    @Path("test")
+    @Path("github/pulls")
     @Produces(MediaType.TEXT_PLAIN)
     public String test() throws IOException {
 
-        return "There are open PR: " + gitHubClient.test();
+        return "Total amount of hours that PRs are open is " + gitHubClient.hoursPROpen();
     }
+
+
 }
