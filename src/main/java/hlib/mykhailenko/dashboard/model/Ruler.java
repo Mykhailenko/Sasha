@@ -1,5 +1,6 @@
 package hlib.mykhailenko.dashboard.model;
 
+import hlib.mykhailenko.dashboard.util.SelfEvictableCache;
 import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -39,6 +40,28 @@ public class Ruler {
             }
 
         }
+    }
+
+    private SelfEvictableCache<List<EvaluatedRule>> cache = new SelfEvictableCache<>(10000);
+
+    public List<EvaluatedRule> doRules() throws Exception {
+        if(cache.isEmpty()) {
+            List<EvaluatedRule> result = new LinkedList<>();
+
+            for (Object objectWithRule : objectWithRules) {
+                for (Method method : objectWithRule.getClass().getMethods()) {
+                    if (method.isAnnotationPresent(Rule.class)) {
+                        final EvaluatedRule evaluatedRule = (EvaluatedRule)
+                                method.invoke(objectWithRule);
+                        result.add(evaluatedRule);
+                    }
+                }
+
+            }
+            cache.put(result);
+        }
+
+        return cache.get();
     }
 
     public static void main(String[] args) throws Exception {
