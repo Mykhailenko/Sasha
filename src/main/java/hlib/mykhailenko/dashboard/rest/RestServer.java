@@ -10,23 +10,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Path("/")
 public class RestServer {
 
     private static final Logger LOGGER = Logger.getLogger(RestServer.class);
-
-    private Ruler ruler = new Ruler("hlib.mykhailenko.dashboard.rules");
-
-    public RestServer() throws Exception {
-    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -39,19 +30,14 @@ public class RestServer {
     }
 
     @GET
-    @Path("rules")
+    @Path("/rules")
     @Produces(MediaType.TEXT_PLAIN)
     public String evaluatedRules() throws Exception {
-
-        final List<EvaluatedRule> evaluatedRules = ruler.doRules();
-//        LOGGER.info(evaluatedRules);
-
-
-        return "There will be a set of evaluated rules. " + evaluatedRules;
+        return "There will be a set of evaluated rules. " + Ruler.getInstance().doRules();
     }
 
     @GET
-    @Path("logs")
+    @Path("/logs")
     @Produces(MediaType.TEXT_PLAIN)
     public String logs() throws Exception {
         try (BufferedReader br =

@@ -2,7 +2,6 @@ package hlib.mykhailenko.dashboard.rules;
 
 import hlib.mykhailenko.dashboard.model.EvaluatedRule;
 import hlib.mykhailenko.dashboard.model.Rule;
-import hlib.mykhailenko.dashboard.util.L;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
@@ -33,15 +32,11 @@ public class GitHubConnector {
     }
 
     @Rule
-    public EvaluatedRule oldRPs() throws IOException {
-
-//        List<GHPullRequest> oldRRs = repos.stream()
-//                .map(silent(x -> x.getPullRequests(GHIssueState.OPEN)));
-//                .flatMap(silent(x -> x.getPullRequests(GHIssueState.OPEN))));
+    public EvaluatedRule twoWeekOldPRs() throws IOException {
         List<GHPullRequest> oldRRs = new LinkedList<>();
         for (GHRepository repo : repos) {
             for (GHPullRequest pullRequest : repo.getPullRequests(GHIssueState.OPEN)) {
-                if (hoursSinceCreation(pullRequest) > 24 * 7) {
+                if (hoursSinceCreation(pullRequest) > 2 * 7 * 24) {
                     oldRRs.add(pullRequest);
                 }
             }
@@ -49,14 +44,13 @@ public class GitHubConnector {
 
 
         if (oldRRs.isEmpty()) {
-            return new EvaluatedRule(EvaluatedRule.STATUS.OK, "No old PRs", "");
+            return new EvaluatedRule(EvaluatedRule.STATUS.OK, "There are no old (2 weeks old) PRs at GitHub.", "");
         } else {
             final String urls = oldRRs.stream()
                     .map(x -> x.getHtmlUrl().toString())
                     .collect(Collectors.joining("\n"));
             return new EvaluatedRule(EvaluatedRule.STATUS.FAILED, "Some PRs are way too old", "Here is list of old PRs:\n" + urls);
         }
-//        return null;
     }
 
     private long hoursSinceCreation(GHPullRequest pullRequest) throws IOException {

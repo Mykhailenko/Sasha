@@ -15,13 +15,24 @@ public class Ruler {
 
     private static final Logger LOGGER = Logger.getLogger(Ruler.class);
 
+    private static Ruler instance = null;
+
+    public static synchronized Ruler getInstance() throws Exception {
+        if(instance == null){
+            instance = new Ruler("hlib.mykhailenko.dashboard.rules");
+        }
+
+        return instance;
+    }
+
 
     private List<Object> objectWithRules = new LinkedList<>();
+
+    private SelfEvictableCache<List<EvaluatedRule>> cache = new SelfEvictableCache<>(10000);
 
     public Ruler(String packageName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Reflections reflections = new Reflections(packageName,
                 new SubTypesScanner(false));
-
 
         Set<Class<? extends Object>> allClasses =
                 reflections.getSubTypesOf(Object.class);
@@ -38,11 +49,8 @@ public class Ruler {
                 LOGGER.info("Found " + aClass.getCanonicalName());
                 objectWithRules.add(aClass.getConstructor().newInstance());
             }
-
         }
     }
-
-    private SelfEvictableCache<List<EvaluatedRule>> cache = new SelfEvictableCache<>(10000);
 
     public List<EvaluatedRule> doRules() throws Exception {
         if(cache.isEmpty()) {
@@ -63,10 +71,5 @@ public class Ruler {
         }
 
         return cache.get();
-    }
-
-    public static void main(String[] args) throws Exception {
-        new Ruler("hlib.mykhailenko.dashboard.rules");
-
     }
 }

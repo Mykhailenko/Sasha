@@ -15,12 +15,12 @@ public class L  {
         };
     }
 
-
     @FunctionalInterface
     public interface FunctionThatThrows<T, R> {
         R apply(T var1) throws Exception;
 
     }
+
 
 }
 
