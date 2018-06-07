@@ -46,6 +46,7 @@ public class Ruler {
 
     public List<EvaluatedRule> doRules() throws Exception {
         if(cache.isEmpty()) {
+            LOGGER.info("Actually evaluation rules");
             List<EvaluatedRule> result = new LinkedList<>();
 
             for (Object objectWithRule : objectWithRules) {
