@@ -23,7 +23,9 @@ public class App {
         jerseyServlet.setInitParameter(
                 "jersey.config.server.provider.classnames",
                 RestServer.class.getCanonicalName());
-        jerseyServlet.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+//        jerseyServlet.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+        jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.fasterxml.jackson.jaxrs");
+
 
 
         ServletHolder holderPwd = new ServletHolder("default", DefaultServlet.class);
