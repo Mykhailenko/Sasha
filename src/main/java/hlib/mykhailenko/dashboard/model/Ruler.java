@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+
 public class Ruler {
 
     private static final Logger LOGGER = Logger.getLogger(Ruler.class);
@@ -52,24 +53,25 @@ public class Ruler {
         }
     }
 
-    public List<EvaluatedRule> doRules() throws Exception {
-        if(cache.isEmpty()) {
+    public synchronized List<EvaluatedRule> doRules() throws Exception {
+        List<EvaluatedRule> evaluatedRules = cache.get();
+        if(evaluatedRules == null) {
             LOGGER.info("Actually evaluation rules");
-            List<EvaluatedRule> result = new LinkedList<>();
+            evaluatedRules = new LinkedList<>();
 
             for (Object objectWithRule : objectWithRules) {
                 for (Method method : objectWithRule.getClass().getMethods()) {
                     if (method.isAnnotationPresent(Rule.class)) {
                         final EvaluatedRule evaluatedRule = (EvaluatedRule)
                                 method.invoke(objectWithRule);
-                        result.add(evaluatedRule);
+                        evaluatedRule.setOkMessage(method.getAnnotation(Rule.class).okMessage());
+                        evaluatedRules.add(evaluatedRule);
                     }
                 }
 
             }
-            cache.put(result);
+            cache.put(evaluatedRules);
         }
-
-        return cache.get();
+        return evaluatedRules;
     }
 }

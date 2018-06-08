@@ -10,42 +10,30 @@ public class EvaluatedRule implements Serializable {
 
     private STATUS status;
 
-    private String message;
+    private String failMessage;
 
-    private String extendedMessage;
+    private String extendedFailMessage;
 
-    public EvaluatedRule() {
+    private String okMessage;
+
+    public EvaluatedRule(STATUS status) {
+        this.status = status;
     }
 
-    public EvaluatedRule(STATUS status, String message, String extendedMessage) {
+    public EvaluatedRule(STATUS status, String failMessage, String extendedFailMessage) {
+        this.failMessage = failMessage;
+        this.extendedFailMessage = extendedFailMessage;
         this.status = status;
-        this.message = message;
-        this.extendedMessage = extendedMessage;
     }
 
     @Override
     public String toString() {
         return "EvaluatedRule{" +
                 "status=" + status +
-                ", message='" + message + '\'' +
-                ", extendedMessage='" + extendedMessage + '\'' +
+                ", failMessage='" + failMessage + '\'' +
+                ", extendedFailMessage='" + extendedFailMessage + '\'' +
+                ", okMessage='" + okMessage + '\'' +
                 '}';
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getExtendedMessage() {
-        return extendedMessage;
-    }
-
-    public void setExtendedMessage(String extendedMessage) {
-        this.extendedMessage = extendedMessage;
     }
 
     public STATUS getStatus() {
@@ -54,5 +42,29 @@ public class EvaluatedRule implements Serializable {
 
     public void setStatus(STATUS status) {
         this.status = status;
+    }
+
+    public String getFailMessage() {
+        return failMessage;
+    }
+
+    public void setFailMessage(String failMessage) {
+        this.failMessage = failMessage;
+    }
+
+    public String getExtendedFailMessage() {
+        return extendedFailMessage;
+    }
+
+    public void setExtendedFailMessage(String extendedFailMessage) {
+        this.extendedFailMessage = extendedFailMessage;
+    }
+
+    public String getOkMessage() {
+        return okMessage;
+    }
+
+    public void setOkMessage(String okMessage) {
+        this.okMessage = okMessage;
     }
 }

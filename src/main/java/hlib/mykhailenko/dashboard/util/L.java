@@ -4,7 +4,6 @@ import java.util.function.Function;
 
 public class L  {
 
-
     public static <T, R> Function<T, R> silent(FunctionThatThrows<T, R> functionThatThrows) {
         return arg -> {
             try {

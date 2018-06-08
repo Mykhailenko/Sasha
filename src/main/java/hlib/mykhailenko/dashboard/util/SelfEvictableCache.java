@@ -21,12 +21,12 @@ public class SelfEvictableCache <T> {
         this.duration = duration;
     }
 
-    public void put(T value){
+    public synchronized void put(T value){
         this.value = value;
         this.date = new Date();
     }
 
-    public T get(){
+    public synchronized T get(){
         final long actualDuration = Duration.between(
                 Instant.from(date.toInstant()),
                 Instant.now())
@@ -39,8 +39,5 @@ public class SelfEvictableCache <T> {
         return value;
     }
 
-    public boolean isEmpty(){
-        return value == null;
-    }
 
 }
