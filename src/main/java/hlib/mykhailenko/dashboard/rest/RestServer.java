@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/")
@@ -31,9 +32,9 @@ public class RestServer {
 
     @GET
     @Path("/rules")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String evaluatedRules() throws Exception {
-        return "There will be a set of evaluated rules. " + Ruler.getInstance().doRules();
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<EvaluatedRule> evaluatedRules() throws Exception {
+        return Ruler.getInstance().doRules();
     }
 
     @GET

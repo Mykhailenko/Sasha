@@ -36,6 +36,10 @@ dependencies {
 
     compile 'log4j:log4j:1.2.17'
 
+//    compile 'com.sun.jersey:jersey-server:1.19.4'
+//    compile 'com.sun.jersey:jersey-json:1.19.4'
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.1'
+
     testCompile 'junit:junit:4.12'
 
 

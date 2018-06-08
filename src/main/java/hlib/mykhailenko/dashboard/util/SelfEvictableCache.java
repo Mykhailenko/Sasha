@@ -27,13 +27,15 @@ public class SelfEvictableCache <T> {
     }
 
     public synchronized T get(){
-        final long actualDuration = Duration.between(
-                Instant.from(date.toInstant()),
-                Instant.now())
-                .toMillis();
-        if(value != null && actualDuration > duration){
+        if(value != null){
+            final long actualDuration = Duration.between(
+                    Instant.from(date.toInstant()),
+                    Instant.now())
+                    .toMillis();
+            if(actualDuration > duration){
 //            LOGGER.info("ActualDuration biggen than 10000ms: " + actualDuration);
-            value = null;
+                value = null;
+            }
         }
 
         return value;

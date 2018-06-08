@@ -1,8 +1,7 @@
 package hlib.mykhailenko.dashboard.model;
 
-import java.io.Serializable;
 
-public class EvaluatedRule implements Serializable {
+public class EvaluatedRule  {
 
     public enum STATUS {
         OK, FAILED;
@@ -15,6 +14,9 @@ public class EvaluatedRule implements Serializable {
     private String extendedFailMessage;
 
     private String okMessage;
+
+    public EvaluatedRule() {
+    }
 
     public EvaluatedRule(STATUS status) {
         this.status = status;
