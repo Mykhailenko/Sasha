@@ -9,4 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Rule {
     String okMessage();
+
+    String failedMessage();
+
+    String id();
 }

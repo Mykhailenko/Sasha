@@ -1,5 +1,6 @@
 package hlib.mykhailenko.dashboard.model;
 
+import hlib.mykhailenko.dashboard.util.Properties;
 import hlib.mykhailenko.dashboard.util.SelfEvictableCache;
 import org.apache.log4j.Logger;
 import org.reflections.Reflections;
@@ -20,16 +21,16 @@ public class Ruler {
 
     public static synchronized Ruler getInstance() throws Exception {
         if(instance == null){
-            instance = new Ruler("hlib.mykhailenko.dashboard.rules");
+            instance = new Ruler(Properties.PACKAGE.asString());
         }
-
+;
         return instance;
     }
 
 
     private List<Object> objectWithRules = new LinkedList<>();
 
-    private SelfEvictableCache<List<EvaluatedRule>> cache = new SelfEvictableCache<>(10000);
+    private SelfEvictableCache<List<EvaluatedRule>> cache = new SelfEvictableCache<>(Properties.FETCH_PERIOD.asInteger());
 
     public Ruler(String packageName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Reflections reflections = new Reflections(packageName,
@@ -64,7 +65,13 @@ public class Ruler {
                     if (method.isAnnotationPresent(Rule.class)) {
                         final EvaluatedRule evaluatedRule = (EvaluatedRule)
                                 method.invoke(objectWithRule);
-                        evaluatedRule.setOkMessage(method.getAnnotation(Rule.class).okMessage());
+                        final Rule rule = method.getAnnotation(Rule.class);
+                        evaluatedRule.setId(rule.id());
+                        if(evaluatedRule.isOk()){
+                            evaluatedRule.setMessage(rule.okMessage());
+                        } else {
+                            evaluatedRule.setMessage(rule.failedMessage());
+                        }
                         evaluatedRules.add(evaluatedRule);
                     }
                 }

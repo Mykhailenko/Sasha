@@ -3,70 +3,66 @@ package hlib.mykhailenko.dashboard.model;
 
 public class EvaluatedRule  {
 
-    public enum STATUS {
+    public enum Status {
         OK, FAILED;
     }
 
-    private STATUS status;
+    private Status status;
 
-    private String failMessage;
+    private String id;
 
-    private String extendedFailMessage;
+    private String message;
 
-    private String okMessage;
+    private String extendedMessage;
 
-    public EvaluatedRule() {
+    public static EvaluatedRule makeOk(){
+        EvaluatedRule evaluatedRule = new EvaluatedRule();
+        evaluatedRule.setStatus(Status.OK);
+        return evaluatedRule;
     }
 
-    public EvaluatedRule(STATUS status) {
+    public static EvaluatedRule makeFailed(String extendedMessage){
+        EvaluatedRule evaluatedRule = new EvaluatedRule();
+        evaluatedRule.setStatus(Status.FAILED);
+        evaluatedRule.setExtendedMessage(extendedMessage);
+        return evaluatedRule;
+    }
+
+    private EvaluatedRule(){}
+
+    public boolean isOk(){
+        return status == Status.OK;
+    }
+
+    public boolean isFailed(){
+        return status == Status.FAILED;
+    }
+
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public EvaluatedRule(STATUS status, String failMessage, String extendedFailMessage) {
-        this.failMessage = failMessage;
-        this.extendedFailMessage = extendedFailMessage;
-        this.status = status;
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public String toString() {
-        return "EvaluatedRule{" +
-                "status=" + status +
-                ", failMessage='" + failMessage + '\'' +
-                ", extendedFailMessage='" + extendedFailMessage + '\'' +
-                ", okMessage='" + okMessage + '\'' +
-                '}';
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public STATUS getStatus() {
-        return status;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatus(STATUS status) {
-        this.status = status;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getFailMessage() {
-        return failMessage;
+    public String getExtendedMessage() {
+        return extendedMessage;
     }
 
-    public void setFailMessage(String failMessage) {
-        this.failMessage = failMessage;
-    }
-
-    public String getExtendedFailMessage() {
-        return extendedFailMessage;
-    }
-
-    public void setExtendedFailMessage(String extendedFailMessage) {
-        this.extendedFailMessage = extendedFailMessage;
-    }
-
-    public String getOkMessage() {
-        return okMessage;
-    }
-
-    public void setOkMessage(String okMessage) {
-        this.okMessage = okMessage;
+    public void setExtendedMessage(String extendedMessage) {
+        this.extendedMessage = extendedMessage;
     }
 }

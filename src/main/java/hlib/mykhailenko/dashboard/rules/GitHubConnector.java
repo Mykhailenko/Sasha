@@ -31,7 +31,9 @@ public class GitHubConnector {
                 .collect(Collectors.toList());
     }
 
-    @Rule(okMessage = "There are no old (2 weeks old) PRs at GitHub.")
+    @Rule(id = "github.absense.old.prs",
+            failedMessage = "There is at least one PR that is older than 2 weeks.",
+            okMessage = "There are no old (2 weeks old) PRs at GitHub.")
     public EvaluatedRule twoWeekOldPRs() throws IOException {
         List<GHPullRequest> oldRRs = new LinkedList<>();
         for (GHRepository repo : repos) {
@@ -44,12 +46,12 @@ public class GitHubConnector {
 
 
         if (oldRRs.isEmpty()) {
-            return new EvaluatedRule(EvaluatedRule.STATUS.OK);
+            return EvaluatedRule.makeOk();
         } else {
             final String urls = oldRRs.stream()
                     .map(x -> x.getHtmlUrl().toString())
                     .collect(Collectors.joining("\n"));
-            return new EvaluatedRule(EvaluatedRule.STATUS.FAILED, "Some PRs are way too old", "Here is list of old PRs:\n" + urls);
+            return EvaluatedRule.makeFailed("Here is list of old PRs:\n" + urls);
         }
     }
 
