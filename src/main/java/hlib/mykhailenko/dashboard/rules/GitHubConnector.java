@@ -44,7 +44,6 @@ public class GitHubConnector {
             }
         }
 
-
         if (oldRRs.isEmpty()) {
             return EvaluatedRule.makeOk();
         } else {

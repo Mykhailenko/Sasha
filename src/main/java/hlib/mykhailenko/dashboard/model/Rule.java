@@ -13,4 +13,7 @@ public @interface Rule {
     String failedMessage();
 
     String id();
+
+    // in ms
+    int updatePeriod() default 10000;
 }

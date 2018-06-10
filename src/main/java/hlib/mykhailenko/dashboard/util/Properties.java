@@ -5,9 +5,7 @@ import java.io.IOException;
 
 public enum Properties {
 
-    PACKAGE("app.rules-package"),
-
-    FETCH_PERIOD("fetch.period");
+    PACKAGE("app.rules-package");
 
     Properties(String key){
         this.key = key;

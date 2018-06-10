@@ -19,8 +19,6 @@ public class L  {
         R apply(T var1) throws Exception;
 
     }
-
-
 }
 
 

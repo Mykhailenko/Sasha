@@ -1,19 +1,67 @@
 package hlib.mykhailenko.dashboard.model;
 
 import hlib.mykhailenko.dashboard.util.Properties;
-import hlib.mykhailenko.dashboard.util.SelfEvictableCache;
 import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Ruler {
+
+    private static class CacheEntry {
+        private Object object;
+        private Method method;
+        private EvaluatedRule evaluatedRule;
+        private Rule rule;
+        private Date latestRetrieve;
+
+        public CacheEntry(Object object, Method method) {
+            this.object = object;
+            this.method = method;
+            this.latestRetrieve = null;
+            this.rule = method.getAnnotation(Rule.class);
+            this.evaluatedRule = null;
+        }
+
+        public synchronized EvaluatedRule evaluate() {
+            if(latestRetrieve == null || evaluatedRule == null ||
+                    Duration.between(
+                            Instant.from(latestRetrieve.toInstant()),
+                            Instant.now())
+                            .toMillis() > rule.updatePeriod()){
+                actualyEvaluate();
+            }
+            assert latestRetrieve != null;
+            assert evaluatedRule != null;
+
+            return evaluatedRule;
+        }
+
+        private void actualyEvaluate() {
+            try {
+                evaluatedRule = (EvaluatedRule) method.invoke(object);
+                evaluatedRule.setId(rule.id());
+                if(evaluatedRule.isOk()){
+                    evaluatedRule.setMessage(rule.okMessage());
+                } else {
+                    evaluatedRule.setMessage(rule.failedMessage());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            latestRetrieve = new Date();
+        }
+    }
 
     private static final Logger LOGGER = Logger.getLogger(Ruler.class);
 
@@ -23,14 +71,11 @@ public class Ruler {
         if(instance == null){
             instance = new Ruler(Properties.PACKAGE.asString());
         }
-;
+
         return instance;
-    }
+    };
 
-
-    private List<Object> objectWithRules = new LinkedList<>();
-
-    private SelfEvictableCache<List<EvaluatedRule>> cache = new SelfEvictableCache<>(Properties.FETCH_PERIOD.asInteger());
+    private List<CacheEntry> cacheEntries = new LinkedList<>();
 
     public Ruler(String packageName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Reflections reflections = new Reflections(packageName,
@@ -40,45 +85,18 @@ public class Ruler {
                 reflections.getSubTypesOf(Object.class);
 
         for (Class<?> aClass : allClasses) {
-            boolean shouldCreateInstance = false;
-            for (Method method : aClass.getMethods()) {
-                if (method.isAnnotationPresent(Rule.class)) {
-                    shouldCreateInstance = true;
-                    break;
+            for (Method aMethod : aClass.getMethods()) {
+                if (aMethod.isAnnotationPresent(Rule.class)) {
+                    cacheEntries.add(new CacheEntry(aClass, aMethod));
                 }
-            }
-            if (shouldCreateInstance) {
-                LOGGER.info("Found " + aClass.getCanonicalName());
-                objectWithRules.add(aClass.getConstructor().newInstance());
             }
         }
     }
 
-    public synchronized List<EvaluatedRule> doRules() throws Exception {
-        List<EvaluatedRule> evaluatedRules = cache.get();
-        if(evaluatedRules == null) {
-            LOGGER.info("Actually evaluation rules");
-            evaluatedRules = new LinkedList<>();
-
-            for (Object objectWithRule : objectWithRules) {
-                for (Method method : objectWithRule.getClass().getMethods()) {
-                    if (method.isAnnotationPresent(Rule.class)) {
-                        final EvaluatedRule evaluatedRule = (EvaluatedRule)
-                                method.invoke(objectWithRule);
-                        final Rule rule = method.getAnnotation(Rule.class);
-                        evaluatedRule.setId(rule.id());
-                        if(evaluatedRule.isOk()){
-                            evaluatedRule.setMessage(rule.okMessage());
-                        } else {
-                            evaluatedRule.setMessage(rule.failedMessage());
-                        }
-                        evaluatedRules.add(evaluatedRule);
-                    }
-                }
-
-            }
-            cache.put(evaluatedRules);
-        }
-        return evaluatedRules;
+    public List<EvaluatedRule> doRules() throws Exception {
+        return cacheEntries
+                .stream()
+                .map(CacheEntry::evaluate)
+                .collect(Collectors.toList());
     }
 }
