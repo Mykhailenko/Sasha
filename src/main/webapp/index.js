@@ -11,4 +11,4 @@ var UPDATE_INTERVAL = 3000;
 //        }});
 //}, 3000);
 
-alert(UPDATE_INTERVAL)
+//alert(UPDATE_INTERVAL)

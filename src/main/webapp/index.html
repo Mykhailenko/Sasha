@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
     <script src="index.js"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>Let's monitor the world</title>
 </head>
@@ -13,7 +12,12 @@
         <div class="container">Header</div>
     </header>
     <div class="main" id="main">
-        <div class="container">Some test here</div>
+        <div class="rule rule-passed">
+            There are no old (2 weeks old) PRs at GitHub.
+        </div>
+        <div class="rule rule-failed">
+            There is at least one PR that is older than 2 weeks.
+        </div>
     </div>
     <footer>
         <div class="container">Footer</div>
