@@ -1,5 +1,6 @@
 package hlib.mykhailenko.dashboard.rest;
 
+import hlib.mykhailenko.dashboard.util.Properties;
 import  org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -12,7 +13,7 @@ public class App {
         context.setContextPath("/");
         context.setWelcomeFiles(new String[]{"index.html"});
 
-        Server jettyServer = new Server(8080);
+        Server jettyServer = new Server(Properties.SERVER_HTTP_PORT.asInteger());
         jettyServer.setHandler(context);
 
         ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/rest/*");  // /*

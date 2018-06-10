@@ -5,7 +5,9 @@ import java.io.IOException;
 
 public enum Properties {
 
-    PACKAGE("app.rules-package");
+    PACKAGE("app.rules-package"),
+
+    SERVER_HTTP_PORT("server.http.port");
 
     Properties(String key){
         this.key = key;
