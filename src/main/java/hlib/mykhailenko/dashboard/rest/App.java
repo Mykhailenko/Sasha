@@ -12,7 +12,7 @@ public class App {
         context.setContextPath("/");
         context.setWelcomeFiles(new String[]{"index.html"});
 
-        Server jettyServer = new Server(80);
+        Server jettyServer = new Server(8080);
         jettyServer.setHandler(context);
 
         ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/rest/*");  // /*

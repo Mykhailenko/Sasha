@@ -87,16 +87,19 @@ public class Ruler {
         for (Class<?> aClass : allClasses) {
             for (Method aMethod : aClass.getMethods()) {
                 if (aMethod.isAnnotationPresent(Rule.class)) {
-                    cacheEntries.add(new CacheEntry(aClass, aMethod));
+                    cacheEntries.add(new CacheEntry(aClass.newInstance(), aMethod));
                 }
             }
         }
     }
 
-    public List<EvaluatedRule> doRules() throws Exception {
-        return cacheEntries
+    public List<EvaluatedRule> evaluateAllRules() throws Exception {
+        System.out.println("Here");
+        final List<EvaluatedRule> collect = cacheEntries
                 .stream()
                 .map(CacheEntry::evaluate)
                 .collect(Collectors.toList());
+        System.out.println("but not here");
+        return collect;
     }
 }

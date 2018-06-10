@@ -34,7 +34,7 @@ public class RestServer {
     @Path("/rules")
     @Produces(MediaType.APPLICATION_JSON)
     public List<EvaluatedRule> evaluatedRules() throws Exception {
-        return Ruler.getInstance().doRules();
+        return Ruler.getInstance().evaluateAllRules();
     }
 
     @GET

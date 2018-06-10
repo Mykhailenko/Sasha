@@ -26,7 +26,7 @@ public enum Properties {
     static {
         prop = new java.util.Properties();
         try {
-            prop.load(new FileInputStream("app.properties"));
+            prop.load(Properties.class.getClassLoader().getResourceAsStream("app.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }

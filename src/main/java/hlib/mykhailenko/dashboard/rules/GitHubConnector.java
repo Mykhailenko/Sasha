@@ -2,10 +2,7 @@ package hlib.mykhailenko.dashboard.rules;
 
 import hlib.mykhailenko.dashboard.model.EvaluatedRule;
 import hlib.mykhailenko.dashboard.model.Rule;
-import org.kohsuke.github.GHIssueState;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -60,6 +57,5 @@ public class GitHubConnector {
                 Instant.now())
                 .toHours();
     }
-
 
 }
