@@ -1,6 +1,8 @@
 package hlib.mykhailenko.dashboard.model;
 
 
+import java.util.Date;
+
 public class EvaluatedRule  {
 
     public enum Status {
@@ -14,6 +16,8 @@ public class EvaluatedRule  {
     private String message;
 
     private String extendedMessage;
+
+    private Date date = new Date();
 
     public static EvaluatedRule makeOk(){
         EvaluatedRule evaluatedRule = new EvaluatedRule();
@@ -64,5 +68,13 @@ public class EvaluatedRule  {
 
     public void setExtendedMessage(String extendedMessage) {
         this.extendedMessage = extendedMessage;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

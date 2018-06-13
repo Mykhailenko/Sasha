@@ -27,7 +27,6 @@ public class RestServer {
                 .filter(x -> x.isAnnotationPresent(Path.class))
                 .map(x -> x.getAnnotation(Path.class).value())
                 .collect(Collectors.joining("\n"));
-
     }
 
     @GET

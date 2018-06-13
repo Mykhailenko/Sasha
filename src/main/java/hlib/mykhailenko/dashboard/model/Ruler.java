@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -12,7 +14,16 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.Timer;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 
@@ -33,33 +44,48 @@ public class Ruler {
             this.evaluatedRule = null;
         }
 
-        public synchronized EvaluatedRule evaluate() {
-            if(latestRetrieve == null || evaluatedRule == null ||
+        public synchronized Optional<EvaluatedRule> evaluate() {
+            if (latestRetrieve == null || evaluatedRule == null ||
                     Duration.between(
                             Instant.from(latestRetrieve.toInstant()),
                             Instant.now())
-                            .toMillis() > rule.updatePeriod()){
+                            .toMillis() > rule.updatePeriod()) {
                 actualyEvaluate();
             }
-            assert latestRetrieve != null;
-            assert evaluatedRule != null;
 
-            return evaluatedRule;
+            return Optional.ofNullable(evaluatedRule);
         }
 
         private void actualyEvaluate() {
+
+
+            final ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
+            final Future<Optional<EvaluatedRule>> future = pool.submit(() -> {
+                EvaluatedRule evaluatedRule;
+                try {
+                    evaluatedRule = (EvaluatedRule) method.invoke(object);
+                    evaluatedRule.setId(rule.id());
+                    if (evaluatedRule.isOk()) {
+                        evaluatedRule.setMessage(rule.okMessage());
+                    } else {
+                        evaluatedRule.setMessage(rule.failedMessage());
+                    }
+                    return Optional.of(evaluatedRule);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Optional.empty();
+            });
+
             try {
-                evaluatedRule = (EvaluatedRule) method.invoke(object);
-                evaluatedRule.setId(rule.id());
-                if(evaluatedRule.isOk()){
-                    evaluatedRule.setMessage(rule.okMessage());
-                } else {
-                    evaluatedRule.setMessage(rule.failedMessage());
+                final Optional<EvaluatedRule> evaluatedRule = future.get(rule.maxDelay(), TimeUnit.MILLISECONDS);
+                if(evaluatedRule.isPresent()){
+                    this.evaluatedRule = evaluatedRule.get();
+                    this.latestRetrieve = new Date();
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-            latestRetrieve = new Date();
         }
     }
 
@@ -68,12 +94,15 @@ public class Ruler {
     private static Ruler instance = null;
 
     public static synchronized Ruler getInstance() throws Exception {
-        if(instance == null){
+        LOGGER.info("Initialization of Ruler...");
+        if (instance == null) {
             instance = new Ruler(Properties.PACKAGE.asString());
         }
 
         return instance;
-    };
+    }
+
+    ;
 
     private List<CacheEntry> cacheEntries = new LinkedList<>();
 
@@ -87,19 +116,18 @@ public class Ruler {
         for (Class<?> aClass : allClasses) {
             for (Method aMethod : aClass.getMethods()) {
                 if (aMethod.isAnnotationPresent(Rule.class)) {
-                    cacheEntries.add(new CacheEntry(aClass.newInstance(), aMethod));
+                    cacheEntries.add(new CacheEntry(aClass.getConstructor().newInstance(), aMethod));
                 }
             }
         }
     }
 
     public List<EvaluatedRule> evaluateAllRules() throws Exception {
-        System.out.println("Here");
-        final List<EvaluatedRule> collect = cacheEntries
+        return cacheEntries
                 .stream()
                 .map(CacheEntry::evaluate)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
-        System.out.println("but not here");
-        return collect;
     }
 }

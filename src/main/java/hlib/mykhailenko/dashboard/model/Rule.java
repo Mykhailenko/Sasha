@@ -16,4 +16,6 @@ public @interface Rule {
 
     // in ms
     int updatePeriod() default 10000;
+
+    int maxDelay() default 10000;
 }

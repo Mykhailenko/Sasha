@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static hlib.mykhailenko.dashboard.util.L.silent;
 
@@ -21,7 +23,7 @@ public class GitHubConnector {
     private List<GHRepository> repos = new LinkedList<>();
 
     public GitHubConnector() throws URISyntaxException, IOException {
-        GitHub github = GitHub.connectAnonymously();
+        final GitHub github = GitHub.connect("mykhailenko", " e446eeab8e8699f234c008f15879bf707d19f64c");
 
         repos = Files.lines(Paths.get(ClassLoader.getSystemResource("github/repositories.list").toURI()))
                 .map(silent(github::getRepository))
