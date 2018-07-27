@@ -22,8 +22,14 @@ public class GitHubConnector {
 
     private List<GHRepository> repos = new LinkedList<>();
 
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        final GitHubConnector gitHubConnector = new GitHubConnector();
+        System.out.println(gitHubConnector.twoWeekOldPRs());
+
+    }
+
     public GitHubConnector() throws URISyntaxException, IOException {
-        final GitHub github = GitHub.connect("mykhailenko", " e446eeab8e8699f234c008f15879bf707d19f64c");
+        final GitHub github = GitHub.connect("mykhailenko", "3c22159854745c827a5a39d9fd9c6a51cc551b2a");
 
         repos = Files.lines(Paths.get(ClassLoader.getSystemResource("github/repositories.list").toURI()))
                 .map(silent(github::getRepository))
@@ -47,11 +53,15 @@ public class GitHubConnector {
             return EvaluatedRule.makeOk();
         } else {
             final String urls = oldRRs.stream()
-                    .map(x -> x.getHtmlUrl().toString())
+                    .map(GHIssue::getHtmlUrl)
+                    .map(Object::toString)
+                    .map(s -> "<li>" + s + "</li>")
                     .collect(Collectors.joining("\n"));
-            return EvaluatedRule.makeFailed("Here is list of old PRs:\n" + urls);
+            return EvaluatedRule.makeFailed(counter + " here is list of old PRs:\n" + urls);
         }
     }
+
+    private int counter = 0;
 
     private long hoursSinceCreation(GHPullRequest pullRequest) throws IOException {
         return Duration.between(

@@ -77,4 +77,15 @@ public class EvaluatedRule  {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "EvaluatedRule{" +
+                "status=" + status +
+                ", id='" + id + '\'' +
+                ", message='" + message + '\'' +
+                ", extendedMessage='" + extendedMessage + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

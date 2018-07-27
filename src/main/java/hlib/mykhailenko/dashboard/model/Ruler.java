@@ -94,8 +94,8 @@ public class Ruler {
     private static Ruler instance = null;
 
     public static synchronized Ruler getInstance() throws Exception {
-        LOGGER.info("Initialization of Ruler...");
         if (instance == null) {
+            LOGGER.info("Initialization of Ruler...");
             instance = new Ruler(Properties.PACKAGE.asString());
         }
 

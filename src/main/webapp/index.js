@@ -1,14 +1,29 @@
 
-var UPDATE_INTERVAL = 3000;
+var server = {}
+server.pullInterval = 3000;
+server.endpoint = "/rest/rules"
+
+window.setInterval(() => {
+    $.ajax({url: server.endpoint, success: (result) => {
+        result.forEach((evalutedRule) => {
+            if(document.getElementById(evalutedRule.id) == null){
+                createContainer(evalutedRule)
+            } else {
+                updateContainer(evalutedRule)
+            }
+        })
+    }});
+}, server.pullInterval);
+
+function createContainer(evalutedRule) {
+
+}
+
+function updateContainer(evalutedRule) {
+}
 
 
-//window.setInterval(function(){
-//    $.ajax({url: "/rest/rules", success: function(result){
-//            var div = document.createElement("div");
+//var div = document.createElement("div");
 //            div.style.color = "red";
-//            div.innerHTML = "Hello";
+//            div.innerHTML = result;
 //            document.getElementById("main").appendChild(div);
-//        }});
-//}, 3000);
-
-//alert(UPDATE_INTERVAL)
