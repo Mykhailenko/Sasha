@@ -5,16 +5,44 @@
   margin: 0 auto;
 }
 
+
+header {
+  height: 50px;
+  vertical-align: middle;
+  text-align: center;
+  /*background-color: #d9aa2c;*/
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  background-color: white;
+}
+
 .rule {
   padding: 10px;
-  width: auto;
+  width: calc(50% - 50px);
   margin: 10px;
+  display: block;
+  float: left;
 }
 
-.rule-passed {
-  border: 1px dashed gray;
+
+.rule-box-failed {
+  border: 2px solid red;
+  background-color: #f5bea8;
 }
 
-.rule-failed {
-  border: 4px solid red;
+.rule-summary{
+}
+
+.rule-list{
+}
+
+.rule-list-item{
+}
+
+.rule-box-succeeded{
+  border: 2px dotted green;
+  background-color: white;
 }
