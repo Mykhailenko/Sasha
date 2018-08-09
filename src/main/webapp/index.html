@@ -8,64 +8,27 @@
     <title>Let's monitor the world</title>
 </head>
 <body>
-    <header>
-        <h1 class="container">Dashboard</h1>
-    </header>
-    <div class="main" id="main">
-        <details class="rule rule-box-failed" >
-            <summary class="rule-summary" >There is at least one PR that is older than 2 weeks.</summary>
+<header>
+    <h1 class="container">Dashboard</h1>
+</header>
+<div class="main" id="main">
+    <div id="prs">
+        <details class="rule rule-box-failed">
+            <summary class="rule-summary">There is at least one PR that is older than 2 weeks.</summary>
             List of old PRs:
-            <ol class="rule-list" >
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/232</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/2112</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/1</li>
+            <ol class="rule-list">
+                <li class="rule-list-item">http://github.com/ow2-proactive/scheduling/pull/232</li>
+                <li class="rule-list-item">http://github.com/ow2-proactive/scheduling/pull/2112</li>
+                <li class="rule-list-item">http://github.com/ow2-proactive/scheduling/pull/1</li>
             </ol>
         </details>
-        <div class="rule rule-box-succeeded" >
-            No old PRs it open
-        </div>
-        <details class="rule rule-box-failed" >
-            <summary class="rule-summary" >There is at least one PR that is older than 2 weeks.</summary>
-            List of old PRs:
-            <ol class="rule-list" >
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/232</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/2112</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/1</li>
-            </ol>
-        </details>
-        <details class="rule rule-box-failed" >
-            <summary class="rule-summary" >There is at least one PR that is older than 2 weeks.</summary>
-            List of old PRs:
-            <ol class="rule-list" >
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/232</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/2112</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/1</li>
-            </ol>
-        </details>
-        <details class="rule rule-box-failed" >
-            <summary class="rule-summary" >There is at least one PR that is older than 2 weeks.</summary>
-            List of old PRs:
-            <ol class="rule-list" >
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/232</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/2112</li>
-                <li class="rule-list-item" >http://github.com/ow2-proactive/scheduling/pull/1</li>
-            </ol>
-        </details>
-        <div class="rule rule-box-succeeded" >
-            No old PRs it open
-        </div>
-        <div class="rule rule-box-succeeded" >
-            No old PRs it open
-        </div>
-        <div class="rule rule-box-succeeded" >
-            No old PRs it open
-        </div>
-        <div class="rule rule-box-succeeded" >
-            No old PRs it open
-        </div>
     </div>
-    <footer>
-        <!--<div class="container">Footer</div>-->
-    </footer>
+    <div id="www" class="rule rule-box-succeeded">
+        No old PRs it open
+    </div>
+</div>
+<footer>
+    <!--<div class="container">Footer</div>-->
+</footer>
 </body>
 </html>

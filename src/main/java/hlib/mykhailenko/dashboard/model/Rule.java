@@ -15,7 +15,7 @@ public @interface Rule {
     String id();
 
     // in ms
-    int updatePeriod() default 10000;
+    int updatePeriod() default 100000;
 
-    int maxDelay() default 10000;
+    int maxDelay() default 100000;
 }

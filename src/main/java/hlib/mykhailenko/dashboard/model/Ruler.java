@@ -84,7 +84,7 @@ public class Ruler {
                     this.latestRetrieve = new Date();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
