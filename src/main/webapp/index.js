@@ -7,7 +7,7 @@ window.setInterval(() => {
     $.ajax({url: server.endpoint, success: (result) => {
         result.forEach((evalutedRule) => {
             if(document.getElementById(evalutedRule.id) == null){
-                createContainer(evalutedRule)
+                addContainer(evalutedRule)
             } else {
                 updateContainer(evalutedRule)
             }
@@ -15,8 +15,11 @@ window.setInterval(() => {
     }});
 }, server.pullInterval);
 
+function addContainer(evalutedRule){
+    document.getElementById('main').appendChild(createContainer(evalutedRule))
+}
+
 function createContainer(evalutedRule) {
-    alert("createContainer " + evalutedRule.id)
     var div = document.createElement('div')
     div.id = evalutedRule.id
     if (evalutedRule.ok){
@@ -32,9 +35,9 @@ function createContainer(evalutedRule) {
         details.innerHTML += evalutedRule.extendedMessage
         div.appendChild(details)
     }
-    document.getElementById('main').appendChild(div)
-
+    return div
 }
 
 function updateContainer(evalutedRule) {
+    document.getElementById(evalutedRule.id).innerHTML = createContainer(evalutedRule).innerHTML
 }
